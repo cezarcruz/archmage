@@ -8,6 +8,9 @@ sudo pacman -Syu firefox ttf-dejavu docker docker-compose git go btop neovim ref
 # if gnome
 sudo pacman -Syu ghostty papers --noconfirm
 
+# if runner
+sudo pacman -Syu flatpak --noconfirm
+
 sudo usermod -aG docker $USER #mantain to remove another moment
 sudo mkdir /opt/intellij
 sudo chown -R $USER /opt/intellij
