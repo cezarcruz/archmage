@@ -25,6 +25,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install sudo
+        run: pacman -Syu --noconfirm && pacman -S sudo --noconfirm
+
       - name: Make arch.sh executable
         run: chmod +x ./arch.sh
 
