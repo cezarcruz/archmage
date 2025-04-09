@@ -46,7 +46,7 @@ install_aur_packages() {
 }
 
 download_intellij() {
-    wget -O -nv idea.tar.gz "https://download.jetbrains.com/idea/ideaIC-2024.3.5.tar.gz"
+    wget -nv -O idea.tar.gz "https://download.jetbrains.com/idea/ideaIC-2024.3.5.tar.gz"
     tar -xzf idea.tar.gz
     mv idea-IC-243.26053.27/* /opt/intellij/
     rm -rf idea-IC-243.26053.27
