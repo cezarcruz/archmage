@@ -57,3 +57,10 @@ configure_home() {
     cp fonts.conf ~/.config/fontconfig/
     cp .mise.toml ~/
 }
+
+
+configure_home
+download_intellij
+configure_aur
+install_aur_packages
+enable_services
