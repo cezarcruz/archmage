@@ -6,3 +6,5 @@
 	signingkey = /home/cezar/.ssh/id_rsa.pub
 	email = 
 	name = Cezar Cruz
+[init]
+	defaultBranch = main
