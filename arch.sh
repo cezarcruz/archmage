@@ -30,6 +30,7 @@ enable_services() {
 }
 
 configure_aur() {
+    sudo pacman-key --init
     sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
     sudo pacman-key --lsign-key 3056513887B78AEB
 
@@ -45,7 +46,7 @@ install_aur_packages() {
 }
 
 download_intellij() {
-    wget -O idea.tar.gz "https://download.jetbrains.com/idea/ideaIC-2024.3.5.tar.gz"
+    wget -O -nv idea.tar.gz "https://download.jetbrains.com/idea/ideaIC-2024.3.5.tar.gz"
     tar -xzf idea.tar.gz
     mv idea-IC-243.26053.27/* /opt/intellij/
     rm -rf idea-IC-243.26053.27
