@@ -1,0 +1,7 @@
+polkit.addRule(function(action, subject) {
+        if (subject.isInGroup("wheel")) {
+                if (action.id.startsWith("org.freedesktop.udisks2.filesystem-mount-system")) {
+                        return polkit.Result.YES;
+                }
+        }
+});
