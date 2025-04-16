@@ -1,21 +1,28 @@
 #!/usr/bin/env sh
 
-sudo pacman -Syu firefox ttf-dejavu docker docker-compose git go btop neovim reflector ttf-jetbrains-mono zsh pacman-contrib bat inter-font pkgstats fish ttf-roboto less --noconfirm
-
 # if kde
 #sudo pacman -Syu spectacle xdg-desktop-portal-gtk flatpak partitionmanager okular geoclue elisa dragon filelight gwenview
 
-# if gnome
-sudo pacman -Syu ghostty papers nautilus-python --noconfirm
-
 # if runner
-sudo pacman -Syu flatpak wget --noconfirm
+#sudo pacman -Syu flatpak wget --noconfirm
 
-sudo usermod -aG docker "$USER" #mantain to remove another moment
-sudo mkdir /opt/intellij
-sudo chown -R "$USER" /opt/intellij
+install_base_packages() {
+    sudo pacman -Syu firefox ttf-dejavu docker docker-compose git go btop neovim reflector ttf-jetbrains-mono zsh pacman-contrib bat inter-font pkgstats fish ttf-roboto less --noconfirm
+}
 
-sudo pacman -R htop nano epiphany --noconfirm
+install_gnome_packages() {
+    # if gnome
+    sudo pacman -Syu ghostty papers nautilus-python --noconfirm
+}
+
+install_intellij() {
+    sudo mkdir /opt/intellij
+    sudo chown -R "$USER" /opt/intellij
+}
+
+configure_docker() {
+    sudo usermod -aG docker "$USER" #mantain to remove another moment
+}
 
 install_flatpaks() {
     #flatpak install flathub com.spotify.Client flathub com.valvesoftware.Steam com.github.tchx84.Flatseal com.obsproject.Studio dev.vencord.Vesktop io.dbeaver.DBeaverCommunity org.kde.kdenlive org.libreoffice.LibreOffice -y
@@ -56,14 +63,29 @@ download_intellij() {
 configure_home() {
     cp .gitconfig ~/ #warning: where is my email?
     mkdir -p ~/.config/fontconfig
-    cp fonts.conf ~/.config/fontconfig/
+    cp ./fontconfig/fonts.conf ~/.config/fontconfig/
     cp .mise.toml ~/
 }
 
+configure_mise() {
+    curl https://mise.run | sh
+    echo '~/.local/bin/mise activate fish | source' >> ~/.config/fish/config.fish
+}
 
-configure_home
-download_intellij
-configure_aur
-install_aur_packages
-enable_services
-install_flatpaks
+configure_load_disk() {
+    sudo cp 50-udisks.rules /etc/polkit-1/rules.d/
+}
+
+
+# configure_home
+# download_intellij
+# configure_aur
+# install_aur_packages
+# enable_services
+# install_flatpaks
+
+# configure_load_disk
+
+configure_mise
+
+#sudo pacman -R htop nano epiphany gnome-tour gnome-console --noconfirm
