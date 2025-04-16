@@ -77,15 +77,14 @@ configure_load_disk() {
 }
 
 
-# configure_home
-# download_intellij
-# configure_aur
-# install_aur_packages
-# enable_services
-# install_flatpaks
+configure_home
+download_intellij
+configure_aur
+install_aur_packages
+enable_services
+install_flatpaks
 
-# configure_load_disk
-
+configure_load_disk
 configure_mise
 
 #sudo pacman -R htop nano epiphany gnome-tour gnome-console --noconfirm
