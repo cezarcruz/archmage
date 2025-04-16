@@ -6,7 +6,7 @@ sudo pacman -Syu firefox ttf-dejavu docker docker-compose git go btop neovim ref
 #sudo pacman -Syu spectacle xdg-desktop-portal-gtk flatpak partitionmanager okular geoclue elisa dragon filelight gwenview
 
 # if gnome
-sudo pacman -Syu ghostty papers --noconfirm
+sudo pacman -Syu ghostty papers nautilus-python --noconfirm
 
 # if runner
 sudo pacman -Syu flatpak wget --noconfirm
@@ -17,9 +17,10 @@ sudo chown -R $USER /opt/intellij
 
 sudo pacman -R htop nano epiphany --noconfirm
 
-
-#flatpak install flathub com.spotify.Client flathub com.valvesoftware.Steam com.github.tchx84.Flatseal com.obsproject.Studio dev.vencord.Vesktop io.dbeaver.DBeaverCommunity org.kde.kdenlive org.libreoffice.LibreOffice -y
-flatpak install flathub com.valvesoftware.Steam -y
+install_flatpaks() {
+    #flatpak install flathub com.spotify.Client flathub com.valvesoftware.Steam com.github.tchx84.Flatseal com.obsproject.Studio dev.vencord.Vesktop io.dbeaver.DBeaverCommunity org.kde.kdenlive org.libreoffice.LibreOffice -y
+    flatpak install flathub com.valvesoftware.Steam -y
+}
 
 enable_services() {
     sudo systemctl enable docker
@@ -65,3 +66,4 @@ download_intellij
 configure_aur
 install_aur_packages
 enable_services
+install_flatpaks
