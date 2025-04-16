@@ -11,9 +11,9 @@ sudo pacman -Syu ghostty papers nautilus-python --noconfirm
 # if runner
 sudo pacman -Syu flatpak wget --noconfirm
 
-sudo usermod -aG docker $USER #mantain to remove another moment
+sudo usermod -aG docker "$USER" #mantain to remove another moment
 sudo mkdir /opt/intellij
-sudo chown -R $USER /opt/intellij
+sudo chown -R "$USER" /opt/intellij
 
 sudo pacman -R htop nano epiphany --noconfirm
 
