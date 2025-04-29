@@ -1,8 +1,5 @@
 #!/usr/bin/env sh
 
-# if kde
-#sudo pacman -Syu spectacle xdg-desktop-portal-gtk flatpak partitionmanager okular geoclue elisa dragon filelight gwenview
-
 # if runner
 #sudo pacman -Syu flatpak wget --noconfirm
 
@@ -13,6 +10,11 @@ install_base_packages() {
 install_gnome_packages() {
     # if gnome
     sudo pacman -Syu ghostty papers nautilus-python --noconfirm
+}
+
+install_kde_packages() {
+    # if kde
+    sudo pacman -Syu spectacle xdg-desktop-portal-gtk flatpak partitionmanager okular geoclue elisa dragon filelight gwenview --noconfirm
 }
 
 install_intellij() {
@@ -69,19 +71,22 @@ configure_home() {
 
 configure_mise() {
     curl https://mise.run | sh
-    echo '~/.local/bin/mise activate fish | source' >> ~/.config/fish/config.fish
+    echo "$HOME/.local/bin/mise activate fish | source" >> ~/.config/fish/config.fish
 }
 
 configure_load_disk() {
     sudo cp 50-udisks.rules /etc/polkit-1/rules.d/
 }
 
+install_base_packages
+install_kde_packages
 
 configure_home
-download_intellij
+configure_docker
+#download_intellij
 configure_aur
 install_aur_packages
-enable_services
+#enable_services
 install_flatpaks
 
 configure_load_disk
