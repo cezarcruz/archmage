@@ -4,17 +4,18 @@
 #sudo pacman -Syu flatpak wget --noconfirm
 
 install_base_packages() {
-    sudo pacman -Syu firefox ttf-dejavu docker docker-compose git go btop neovim reflector ttf-jetbrains-mono zsh pacman-contrib bat inter-font pkgstats fish ttf-roboto less --noconfirm
+    sudo pacman -Syu firefox docker docker-compose git go btop neovim reflector ttf-jetbrains-mono pacman-contrib bat pkgstats fish ttf-roboto ghostty fuse less --noconfirm
 }
 
 install_gnome_packages() {
-    # if gnome
-    sudo pacman -Syu ghostty papers nautilus-python --noconfirm
+    # if gnome    
+    sudo pacman -Syu papers nautilus-python adw-gtk-theme --noconfirm
 }
 
 install_kde_packages() {
     # if kde
-    sudo pacman -Syu spectacle xdg-desktop-portal-gtk flatpak partitionmanager okular geoclue elisa dragon filelight gwenview --noconfirm
+    #sudo pacman -Syu spectacle xdg-desktop-portal-gtk flatpak partitionmanager okular geoclue elisa dragon filelight inter-font gwenview --noconfirm
+    echo 'bypass'
 }
 
 install_intellij() {
@@ -27,8 +28,7 @@ configure_docker() {
 }
 
 install_flatpaks() {
-    #flatpak install flathub com.spotify.Client flathub com.valvesoftware.Steam com.github.tchx84.Flatseal com.obsproject.Studio dev.vencord.Vesktop io.dbeaver.DBeaverCommunity org.kde.kdenlive org.libreoffice.LibreOffice -y
-    flatpak install flathub com.valvesoftware.Steam -y
+    flatpak install flathub com.valvesoftware.Steam com.mattjakeman.ExtensionManager -y
 }
 
 enable_services() {
@@ -36,7 +36,7 @@ enable_services() {
     sudo systemctl enable reflector.timer
     sudo systemctl enable fstrim.timer
     sudo systemctl enable paccache.timer
-    sudo systemctl enable pkgstats.timer
+    #sudo systemctl enable pkgstats.timer
 }
 
 configure_aur() {
@@ -67,11 +67,12 @@ configure_home() {
     mkdir -p ~/.config/fontconfig
     cp ./fontconfig/fonts.conf ~/.config/fontconfig/
     cp .mise.toml ~/
+    cp -r .ssh ~/
 }
 
 configure_mise() {
     curl https://mise.run | sh
-    echo "$HOME/.local/bin/mise activate fish | source" >> ~/.config/fish/config.fish
+    #echo "$HOME/.local/bin/mise activate fish | source" >> ~/.config/fish/config.fish
 }
 
 configure_load_disk() {
@@ -79,14 +80,15 @@ configure_load_disk() {
 }
 
 install_base_packages
-install_kde_packages
+install_gnome_packages
 
 configure_home
 configure_docker
 #download_intellij
+install_intellij
 configure_aur
 install_aur_packages
-#enable_services
+enable_services
 install_flatpaks
 
 configure_load_disk
