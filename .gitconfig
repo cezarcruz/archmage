@@ -4,7 +4,7 @@
 	gpgsign = true
 [user]
 	signingkey = /home/cezar/.ssh/id_rsa.pub
-	email = 
+	email = cezarcruz22@gmail.com
 	name = Cezar Cruz
 [init]
 	defaultBranch = main
