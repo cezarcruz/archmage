@@ -1,17 +1,77 @@
 #!/bin/bash
+#colors
+# red='\e[1;31m%s\e[0m\n'                                                                                                                                                      
+# green='\e[1;32m%s\e[0m\n'
+# yellow='\e[1;33m%s\e[0m\n'
+
+show_question() {
+  local blue=$'\033[0;94m'
+  local nc=$'\033[0m'
+  if [[ "${1:--e}" =~ ^(-e|-n)$ ]]; then
+    echo "${1:--e}" "${blue}${*:2}${nc}"
+  else
+    echo -e "${blue}${*}${nc}"
+  fi
+}
+
+show_info() {
+  local green=$'\033[0;92m'
+  local nc=$'\033[0m'
+  if [[ "${1:--e}" =~ ^(-e|-n)$ ]]; then
+    echo "${1:--e}" "${green}${*:2}${nc}"
+  else
+    echo -e "${green}${*}${nc}"
+  fi
+}
+
+show_warning() {
+  local yellow=$'\033[0;93m'
+  local nc=$'\033[0m'
+  if [[ "${1:--e}" =~ ^(-e|-n)$ ]]; then
+    echo "${1:--e}" "${yellow}${*:2}${nc}"
+  else
+    echo -e "${yellow}${*}${nc}"
+  fi
+}
+
+show_success() {
+  local purple=$'\033[0;95m'
+  local nc=$'\033[0m'
+  if [[ "${1:--e}" =~ ^(-e|-n)$ ]]; then
+    echo "${1:--e}" "${purple}${*:2}${nc}"
+  else
+    echo -e "${purple}${*}${nc}"
+  fi
+}
+
+show_header() {
+  local cyan=$'\033[0;96m'
+  local nc=$'\033[0m'
+  if [[ "${1:--e}" =~ ^(-e|-n)$ ]]; then
+    echo "${1:--e}" "${cyan}${*:2}${nc}"
+  else
+    echo -e "${cyan}${*}${nc}"
+  fi
+}
 
 set -e
 # Solicita senha sudo no início para garantir privilégios ao longo do script
 sudo -v
 
 print_welcome() {
-  echo "Welcome to the Arch Linux setup script!"
+  show_header "Welcome to the Arch Linux setup script!"
+}
+
+show_dry_run_warning() {
+  show_warning "\nThis is a dry run. No changes will be made to your system."
 }
 
 clear
 print_welcome
 
 # Variables
+DRY_RUN=true
+
 KDE_PLASMA_APPS=(
   "spectacle"
   "xdg-desktop-portal-gtk"
@@ -57,7 +117,16 @@ BASE_PACKAGES=(
   "less"
 )
 
+FLATPAK_PACKAGES=(
+  "com.valvesoftware.Steam"
+  #"com.mattjakeman.ExtensionManager" only for GNOME
+)
+
 # Utils
+
+isNotDryRun() {
+  [ "$DRY_RUN" = false ]
+}
 
 # Function to check if a package is installed
 is_installed() {
@@ -81,8 +150,12 @@ install_packages() {
   done
 
   if [ ${#to_install[@]} -ne 0 ]; then
-    printf '\nInstaling: %s' "${to_install[*]}"
-    #sudo pacman -S --noconfirm "${to_install[@]}"
+    printf '\nInstaling: %s\n' "${to_install[*]}"
+    if isNotDryRun; then
+      sudo pacman -S --noconfirm "${to_install[@]}"
+    else
+      show_dry_run_warning
+    fi
   else
     printf '\nAll packages are already installed.\n'  
   fi
@@ -93,8 +166,15 @@ isKde() {
 }
 
 update_system() {
-  printf "\nUpdating system..."
-  sudo pacman -Syu --noconfirm
+  show_info "\nUpdating system..."
+
+  if isNotDryRun; then
+    sudo pacman -Syu --noconfirm
+  else
+    show_dry_run_warning
+  fi
+
+  show_success "\nSystem updated successfully.\n"
 }
 
 install_base_packages() {
@@ -106,21 +186,46 @@ install_base_packages() {
 }
 
 configure_language() {
-  printf "\nConfiguring language settings..."
-  printf "\npt_BR.UTF-8 UTF-8\n" | sudo tee -a /etc/locale.gen
-  sudo locale-gen
+  show_info "\nConfiguring language settings..."
 
-  if isKde; then
-    printf "\nLC_TIME=pt_BR.UTF-8\n" | sudo tee -a /etc/locale.conf
+  if isNotDryRun; then
+    printf "\npt_BR.UTF-8 UTF-8\n" | sudo tee -a /etc/locale.gen
+    sudo locale-gen
+    
+    if isKde; then
+      printf "\nLC_TIME=pt_BR.UTF-8\n" | sudo tee -a /etc/locale.conf
+    fi
+    
+    printf "\nLC_CTYPE=pt_BR.UTF-8\n" | sudo tee -a /etc/locale.conf
+  else
+    show_info "printf pt_BR.UTF-8 UTF-8"
+    
+    if isKde; then
+      show_info "printf LC_TIME=pt_BR.UTF-8"
+    fi
+
+    show_info "printf LC_CTYPE=pt_BR.UTF-8"
+    show_dry_run_warning
   fi
-  
-  printf "\nLC_CTYPE=pt_BR.UTF-8\n" | sudo tee -a /etc/locale.conf
+
 
 }
 
+install_flatpaks() {
+  printf "\nInstalling Flatpak packages..."
+  for pkg in "${FLATPAK_PACKAGES[@]}"; do
+    if ! flatpak list | grep -q "$pkg"; then
+      printf "\nInstalling Flatpak package: %s\n" "$pkg"
+      #flatpak install flathub "$pkg" -y
+    else
+      printf "\nFlatpak package %s is already installed.\n" "$pkg"
+    fi
+  done
+}
+
 main() {
-  #update_system
-  #configure_language
+  update_system
+  configure_language
   install_base_packages
 
   if [ "$DESKTOP_SESSION" = "plasma" ]; then
@@ -136,6 +241,8 @@ main() {
     fi
   fi
 
+  install_flatpaks
+
 }
 
 main
@@ -143,10 +250,6 @@ main
 # install_intellij() {
 #     sudo mkdir /opt/jetbrains
 #     sudo chown -R "$USER" /opt/jetbrains
-# }
-
-# configure_docker() {
-#     sudo usermod -aG docker "$USER" #mantain to remove another moment
 # }
 
 # install_flatpaks() {
