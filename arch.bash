@@ -1,9 +1,5 @@
 #!/bin/bash
 #colors
-# red='\e[1;31m%s\e[0m\n'                                                                                                                                                      
-# green='\e[1;32m%s\e[0m\n'
-# yellow='\e[1;33m%s\e[0m\n'
-
 show_question() {
   local blue=$'\033[0;94m'
   local nc=$'\033[0m'
@@ -115,6 +111,11 @@ BASE_PACKAGES=(
   "ttf-roboto"
   "fuse"
   "less"
+  "mise"
+)
+
+AUR_PACKAGES=(
+  "visual-studio-code-bin"
 )
 
 FLATPAK_PACKAGES=(
@@ -186,7 +187,7 @@ install_base_packages() {
 }
 
 configure_language() {
-  show_info "\nConfiguring language settings..."
+  show_info "Configuring language settings..."
 
   if isNotDryRun; then
     printf "\npt_BR.UTF-8 UTF-8\n" | sudo tee -a /etc/locale.gen
@@ -207,20 +208,142 @@ configure_language() {
     show_info "printf LC_CTYPE=pt_BR.UTF-8"
     show_dry_run_warning
   fi
+}
 
+enable_services() {
+
+  show_info "\nEnabling system services..."
+
+  if isNotDryRun; then
+    sudo systemctl enable docker
+    sudo systemctl enable reflector.timer
+    sudo systemctl enable fstrim.timer
+    sudo systemctl enable paccache.timer
+  else
+    show_info "sudo systemctl enable docker"
+    show_info "sudo systemctl enable reflector.timer"
+    show_info "sudo systemctl enable fstrim.timer"
+    show_info "sudo systemctl enable paccache.timer"
+    show_dry_run_warning
+  fi
+
+}
+
+configure_chaotic_aur() {
+
+  show_info "\nConfiguring Chaotic AUR..."
+
+  if isNotDryRun; then
+    sudo pacman-key --init
+    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+    sudo pacman-key --lsign-key 3056513887B78AEB
+
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+
+    printf "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist\n" | sudo tee -a /etc/pacman.conf
+  else
+    show_info "sudo pacman-key --init"
+    show_info "pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com"
+    show_info "pacman-key --lsign-key 3056513887B78AEB"
+    show_info "pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'"
+    show_info "pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'"
+    show_dry_run_warning
+  fi
 
 }
 
 install_flatpaks() {
   printf "\nInstalling Flatpak packages..."
+  
   for pkg in "${FLATPAK_PACKAGES[@]}"; do
     if ! flatpak list | grep -q "$pkg"; then
       printf "\nInstalling Flatpak package: %s\n" "$pkg"
-      #flatpak install flathub "$pkg" -y
+      
+      if isNotDryRun; then
+        flatpak install flathub "$pkg" -y
+      else
+        show_dry_run_warning
+      fi
+      
     else
       printf "\nFlatpak package %s is already installed.\n" "$pkg"
     fi
   done
+
+}
+
+configure_home() {
+
+  show_info "\nConfiguring home directory..."
+
+  if isNotDryRun; then    
+    cp .gitconfig ~/ #warning: where is my email?
+    mkdir -p ~/.config/fontconfig
+    cp ./fontconfig/fonts.conf ~/.config/fontconfig/
+    cp .mise.toml ~/
+    cp -r .ssh ~/
+  else
+    show_info "cp .gitconfig ~/"
+    show_info "mkdir -p ~/.config/fontconfig"
+    show_info "cp ./fontconfig/fonts.conf ~/.config/fontconfig/"
+    show_info "cp .mise.toml ~/"
+    show_info "cp -r .ssh ~/"
+    show_dry_run_warning
+  fi
+
+}
+
+configure_mise() {
+
+  show_info "\nConfiguring Mise..."
+
+  if isNotDryRun; then    
+    echo "mise activate fish | source" >> ~/.config/fish/config.fish    
+  else
+    show_info "echo \"mise activate fish | source\" >> ~/.config/fish/config.fish"
+    show_dry_run_warning
+  fi
+  
+}
+
+configure_load_disk() {
+
+  show_info "\nConfiguring load disk..."
+
+  if isNotDryRun; then    
+    sudo cp 50-udisks.rules /etc/polkit-1/rules.d/
+  else
+    show_info "sudo cp 50-udisks.rules /etc/polkit-1/rules.d/"
+    show_dry_run_warning
+  fi
+  
+}
+
+garbage_collector() {
+
+  show_info "\nRemoving unnecessary packages..."
+  if isNotDryRun; then
+    sudo pacman -R htop nano epiphany gnome-tour gnome-console --noconfirm # Remove unnecessary packages and dependencies?
+  else
+    show_info "sudo pacman -R htop nano epiphany gnome-tour gnome-console --noconfirm"
+    show_dry_run_warning
+  fi
+}
+
+prepare_intellij_home() {
+
+  show_info "\nPreparing IntelliJ home directory..."
+
+  if isNotDryRun; then
+    sudo mkdir /opt/jetbrains
+    sudo chown -R "$USER" /opt/jetbrains
+  else
+    show_info "sudo mkdir /opt/jetbrains"
+    show_info "sudo chown -R $USER /opt/jetbrains"
+    show_dry_run_warning
+  fi
+  
 }
 
 main() {
@@ -229,8 +352,7 @@ main() {
   install_base_packages
 
   if [ "$DESKTOP_SESSION" = "plasma" ]; then
-    printf "\nDetected KDE Plasma desktop environment. Can you confirm this?"
-    printf " (y/n): "
+    show_question "\nDetected KDE Plasma desktop environment. Can you confirm this? (y/n):"
     read -r response
     if [ "$response" = "y" ]; then
       printf "\nProceeding with KDE Plasma setup..."
@@ -241,83 +363,19 @@ main() {
     fi
   fi
 
+  enable_services
+  configure_chaotic_aur
+
+  install_packages "${AUR_PACKAGES[@]}"
+
   install_flatpaks
+  configure_load_disk
+  configure_mise
+  prepare_intellij_home
+  garbage_collector
 
 }
 
 main
 
-# install_intellij() {
-#     sudo mkdir /opt/jetbrains
-#     sudo chown -R "$USER" /opt/jetbrains
-# }
 
-# install_flatpaks() {
-#     flatpak install flathub com.valvesoftware.Steam com.mattjakeman.ExtensionManager -y
-# }
-
-# enable_services() {
-#     sudo systemctl enable docker
-#     sudo systemctl enable reflector.timer
-#     sudo systemctl enable fstrim.timer
-#     sudo systemctl enable paccache.timer
-#     #sudo systemctl enable pkgstats.timer
-# }
-
-# configure_aur() {
-#     sudo pacman-key --init
-#     sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-#     sudo pacman-key --lsign-key 3056513887B78AEB
-
-#     sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-#     sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-
-#     printf "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist\n" | sudo tee -a /etc/pacman.conf
-
-# }
-
-# install_aur_packages() {
-#     sudo pacman -Syu visual-studio-code-bin --noconfirm
-# }
-
-# download_intellij() {
-#     wget -nv -O idea.tar.gz "https://download.jetbrains.com/idea/ideaIC-2024.3.5.tar.gz"
-#     tar -xzf idea.tar.gz
-#     mv idea-IC-243.26053.27/* /opt/intellij/
-#     rm -rf idea-IC-243.26053.27
-# }
-
-# configure_home() {
-#     cp .gitconfig ~/ #warning: where is my email?
-#     mkdir -p ~/.config/fontconfig
-#     cp ./fontconfig/fonts.conf ~/.config/fontconfig/
-#     cp .mise.toml ~/
-#     cp -r .ssh ~/
-# }
-
-# configure_mise() {
-#     sudo pacman -Syu mise --noconfirm
-#     #curl https://mise.run | sh
-#     #echo "$HOME/.local/bin/mise activate fish | source" >> ~/.config/fish/config.fish
-# }
-
-# configure_load_disk() {
-#     sudo cp 50-udisks.rules /etc/polkit-1/rules.d/
-# }
-
-# install_base_packages
-# install_gnome_packages
-
-# configure_home
-# configure_docker
-# #download_intellij
-# install_intellij
-# configure_aur
-# install_aur_packages
-# enable_services
-# install_flatpaks
-
-# configure_load_disk
-# configure_mise
-
-# sudo pacman -R htop nano epiphany gnome-tour gnome-console --noconfirm
