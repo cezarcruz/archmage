@@ -4,23 +4,23 @@
 #sudo pacman -Syu flatpak wget --noconfirm
 
 install_base_packages() {
-    sudo pacman -Syu firefox docker docker-compose git go btop neovim reflector ttf-jetbrains-mono pacman-contrib bat pkgstats fish ttf-roboto ghostty fuse less --noconfirm
+    sudo pacman -Syu firefox docker docker-compose git go btop neovim reflector ttf-jetbrains-mono pacman-contrib bat pkgstats fish ttf-roboto fuse less --noconfirm
 }
 
 install_gnome_packages() {
     # if gnome    
-    sudo pacman -Syu papers nautilus-python adw-gtk-theme --noconfirm
+    #sudo pacman -Syu papers nautilus-python adw-gtk-theme ghostty --noconfirm
+    echo 'bypass'
 }
 
 install_kde_packages() {
     # if kde
-    #sudo pacman -Syu spectacle xdg-desktop-portal-gtk flatpak partitionmanager okular geoclue elisa dragon filelight inter-font gwenview --noconfirm
-    echo 'bypass'
+    sudo pacman -Syu spectacle xdg-desktop-portal-gtk flatpak partitionmanager okular geoclue elisa dragon filelight inter-font gwenview --noconfirm
 }
 
 install_intellij() {
-    sudo mkdir /opt/intellij
-    sudo chown -R "$USER" /opt/intellij
+    sudo mkdir /opt/jetbrains
+    sudo chown -R "$USER" /opt/jetbrains
 }
 
 configure_docker() {
@@ -71,7 +71,8 @@ configure_home() {
 }
 
 configure_mise() {
-    curl https://mise.run | sh
+    sudo pacman -Syu mise --noconfirm
+    #curl https://mise.run | sh
     #echo "$HOME/.local/bin/mise activate fish | source" >> ~/.config/fish/config.fish
 }
 
