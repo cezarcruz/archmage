@@ -112,6 +112,7 @@ BASE_PACKAGES=(
   "fuse"
   "less"
   "mise"
+  "rsync"
 )
 
 AUR_PACKAGES=(
