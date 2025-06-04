@@ -18,18 +18,8 @@ jobs:
   build:
     # Use a Docker container with Arch Linux as the runner
     runs-on: ubuntu-latest
-    container:
-      image: archlinux:latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
 
-      - name: Install sudo
-        run: pacman -Syu --noconfirm && pacman -S sudo --noconfirm
-
-      - name: Make arch.sh executable
-        run: chmod +x ./arch.sh
-
-      - name: Run arch.sh
-        run: ./arch.sh
