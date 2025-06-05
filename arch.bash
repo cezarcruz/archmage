@@ -113,6 +113,7 @@ BASE_PACKAGES=(
   "less"
   "mise"
   "rsync"
+  "kitty"
 )
 
 AUR_PACKAGES=(
@@ -284,12 +285,18 @@ configure_home() {
     cp ./fontconfig/fonts.conf ~/.config/fontconfig/
     cp .mise.toml ~/
     cp -r .ssh ~/
+    mkdir -p ~/.config/kitty
+    cp ./kitty/kitty.conf ~/.config/kitty/
+    cp ./kitty/current-theme.conf ~/.config/kitty/
   else
     show_info "cp .gitconfig ~/"
     show_info "mkdir -p ~/.config/fontconfig"
     show_info "cp ./fontconfig/fonts.conf ~/.config/fontconfig/"
     show_info "cp .mise.toml ~/"
     show_info "cp -r .ssh ~/"
+    show_info "mkdir -p ~/.config/kitty"
+    show_info "cp ./kitty/kitty.conf ~/.config/kitty/"
+    show_info "cp ./kitty/current-theme.conf ~/.config/kitty/"
     show_dry_run_warning
   fi
 
