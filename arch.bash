@@ -114,6 +114,7 @@ BASE_PACKAGES=(
   "mise"
   "rsync"
   "kitty"
+  "eza"
 )
 
 AUR_PACKAGES=(
