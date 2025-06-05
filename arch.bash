@@ -75,11 +75,12 @@ KDE_PLASMA_APPS=(
   "partitionmanager"
   "okular"
   "geoclue"
-  "elisa"
   "dragon"
   "filelight"
   "inter-font"
   "gwenview"
+  "haruna"
+  "kcalc"
 )
 
 GNOME_APPS=(
