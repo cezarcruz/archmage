@@ -2,7 +2,7 @@
 
 configure_chaotic_aur() {
 
-  show_info "\nConfiguring Chaotic AUR..."
+  show_info "Configuring Chaotic AUR..."
 
   if isNotDryRun; then
     sudo pacman-key --init

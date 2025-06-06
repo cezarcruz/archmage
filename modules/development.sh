@@ -11,5 +11,5 @@ prepare_intellij_home() {
     show_info "sudo mkdir /opt/jetbrains"
     show_info "sudo chown -R $USER /opt/jetbrains"
   fi
-  
+
 }
