@@ -35,6 +35,20 @@ main() {
   configure_language
   install_base_packages
 
+  setup_desktop_environment
+  enable_services
+  configure_chaotic_aur
+  install_aur_packages
+  install_flatpaks
+  
+  configure_user_home
+  configure_mise
+  configure_load_disk
+  prepare_intellij_home
+  garbage_collector
+  
+  show_success "Setup completed successfully!"
+
 }
 
 main

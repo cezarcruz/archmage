@@ -29,8 +29,6 @@ update_system() {
 }
 
 
-
-
 enable_services() {
 
   show_info "\nEnabling system services..."
@@ -50,49 +48,9 @@ enable_services() {
 
 }
 
-configure_chaotic_aur() {
 
-  show_info "\nConfiguring Chaotic AUR..."
 
-  if isNotDryRun; then
-    sudo pacman-key --init
-    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-    sudo pacman-key --lsign-key 3056513887B78AEB
 
-    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-
-    printf "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist\n" | sudo tee -a /etc/pacman.conf
-  else
-    show_info "sudo pacman-key --init"
-    show_info "pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com"
-    show_info "pacman-key --lsign-key 3056513887B78AEB"
-    show_info "pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'"
-    show_info "pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'"
-    show_dry_run_warning
-  fi
-
-}
-
-install_flatpaks() {
-  printf "\nInstalling Flatpak packages..."
-  
-  for pkg in "${FLATPAK_PACKAGES[@]}"; do
-    if ! flatpak list | grep -q "$pkg"; then
-      printf "\nInstalling Flatpak package: %s\n" "$pkg"
-      
-      if isNotDryRun; then
-        flatpak install flathub "$pkg" -y
-      else
-        show_dry_run_warning
-      fi
-      
-    else
-      printf "\nFlatpak package %s is already installed.\n" "$pkg"
-    fi
-  done
-
-}
 
 configure_home() {
 

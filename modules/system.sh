@@ -31,8 +31,6 @@ install_packages() {
     show_info 'Instaling: %s' "${to_install[*]}"
     if isNotDryRun; then
       sudo pacman -S --noconfirm "${to_install[@]}"
-    else
-      show_dry_run_warning
     fi
   else
     show_info 'All packages are already installed.'  
