@@ -1,37 +1,5 @@
 #colors
 
-
-set -e
-# Solicita senha sudo no início para garantir privilégios ao longo do script
-sudo -v
-
-DRY_RUN=true
-
-isNotDryRun() {
-  [ "$DRY_RUN" = false ]
-}
-
-print_welcome() {
-  show_header "Welcome to the Arch Linux setup script!"
-}
-
-show_dry_run_warning() {
-  show_warning "\nThis is a dry run. No changes will be made to your system."
-}
-
-sync_packages() {
-  show_info "\nSynchronizing package databases..."
-  if isNotDryRun; then
-    sudo pacman -Syy
-  else
-    show_dry_run_warning
-  fi
-}
-
-clear
-print_welcome
-sync_packages
-
 # Function to check if a package is installed
 is_installed() {
   pacman -Qi "$1" &>/dev/null
@@ -43,27 +11,6 @@ is_group_installed() {
 }
 
 # Function to install packages using pacman
-install_packages() {
-  local packages=("$@")
-  local to_install=()
-
-  for pkg in "${packages[@]}"; do
-    if ! is_installed "$pkg" && ! is_group_installed "$pkg"; then
-      to_install+=("$pkg")
-    fi
-  done
-
-  if [ ${#to_install[@]} -ne 0 ]; then
-    printf '\nInstaling: %s\n' "${to_install[*]}"
-    if isNotDryRun; then
-      sudo pacman -S --noconfirm "${to_install[@]}"
-    else
-      show_dry_run_warning
-    fi
-  else
-    printf '\nAll packages are already installed.\n'  
-  fi
-}
 
 isKde() {
   [ "$DESKTOP_SESSION" = "plasma" ]
@@ -81,37 +28,8 @@ update_system() {
   show_success "\nSystem updated successfully.\n"
 }
 
-install_base_packages() {
-  printf "\nInstalling base packages..."
-  install_packages "${BASE_PACKAGES[@]}"
 
-  printf "\nInstalling fonts..."
-  install_packages "${FONTS[@]}"
-}
 
-configure_language() {
-  show_info "Configuring language settings..."
-
-  if isNotDryRun; then
-    printf "\npt_BR.UTF-8 UTF-8\n" | sudo tee -a /etc/locale.gen
-    sudo locale-gen
-    
-    if isKde; then
-      printf "\nLC_TIME=pt_BR.UTF-8\n" | sudo tee -a /etc/locale.conf
-    fi
-    
-    printf "\nLC_CTYPE=pt_BR.UTF-8\n" | sudo tee -a /etc/locale.conf
-  else
-    show_info "printf pt_BR.UTF-8 UTF-8"
-    
-    if isKde; then
-      show_info "printf LC_TIME=pt_BR.UTF-8"
-    fi
-
-    show_info "printf LC_CTYPE=pt_BR.UTF-8"
-    show_dry_run_warning
-  fi
-}
 
 enable_services() {
 

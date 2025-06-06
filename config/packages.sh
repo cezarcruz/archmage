@@ -60,3 +60,11 @@ FLATPAK_PACKAGES=(
   "com.valvesoftware.Steam"
   #"com.mattjakeman.ExtensionManager" only for GNOME
 )
+
+export KDE_PLASMA_APPS
+export GNOME_APPS
+export FONTS
+export BASE_PACKAGES
+export AUR_PACKAGES
+export FLATPAK_PACKAGES
+
