@@ -59,3 +59,25 @@ configure_language() {
     show_info "printf LC_CTYPE=pt_BR.UTF-8"
   fi
 }
+
+configure_load_disk() {
+
+  show_info "Configuring load disk..."
+
+  if isNotDryRun; then    
+    sudo cp 50-udisks.rules /etc/polkit-1/rules.d/
+  else
+    show_info "sudo cp 50-udisks.rules /etc/polkit-1/rules.d/"
+  fi
+  
+}
+
+garbage_collector() {
+
+  show_info "Removing unnecessary packages..."
+  if isNotDryRun; then
+    sudo pacman -Rs htop nano epiphany gnome-tour gnome-console --noconfirm # Remove unnecessary packages and dependencies?
+  else
+    show_info "sudo pacman -R htop nano epiphany gnome-tour gnome-console --noconfirm"
+  fi
+}

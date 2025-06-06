@@ -17,6 +17,7 @@ source "$SCRIPT_DIR/modules/services.sh"
 source "$SCRIPT_DIR/modules/aur.sh"
 source "$SCRIPT_DIR/modules/flatpak.sh"
 source "$SCRIPT_DIR/modules/user_config.sh"
+source "$SCRIPT_DIR/modules/development.sh"
 
 # Load configuration settings
 source "$SCRIPT_DIR/config/settings.sh"
