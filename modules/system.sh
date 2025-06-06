@@ -65,9 +65,9 @@ configure_load_disk() {
   show_info "Configuring load disk..."
 
   if isNotDryRun; then    
-    sudo cp 50-udisks.rules /etc/polkit-1/rules.d/
+    sudo cp "$SCRIPT_DIR/50-udisks.rules" /etc/polkit-1/rules.d/
   else
-    show_info "sudo cp 50-udisks.rules /etc/polkit-1/rules.d/"
+    show_info "sudo cp $SCRIPT_DIR/50-udisks.rules /etc/polkit-1/rules.d/"
   fi
   
 }

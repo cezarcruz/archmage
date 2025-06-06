@@ -43,7 +43,7 @@ main() {
   install_flatpaks
   
   configure_user_home
-  configure_mise
+  configure_fish
   configure_load_disk
   prepare_intellij_home
   garbage_collector
