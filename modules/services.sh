@@ -1,7 +1,7 @@
 #!/bin/bash
 enable_services() {
 
-  show_info "\nEnabling system services..."
+  show_info "Enabling system services..."
 
   if isNotDryRun; then
     sudo systemctl enable docker

@@ -1,7 +1,7 @@
 #!/bin/bash
 setup_desktop_environment() {
   if [ "$DESKTOP_SESSION" = "plasma" ]; then
-    show_question "\nDetected KDE Plasma desktop environment. Can you confirm this? (y/n):"
+    show_question "Detected KDE Plasma desktop environment. Can you confirm this? (y/n):"
     read -r response
     if [ "$response" = "y" ]; then
       show_info "Proceeding with KDE Plasma setup..."
