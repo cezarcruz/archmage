@@ -54,6 +54,12 @@ set -e
 # Solicita senha sudo no início para garantir privilégios ao longo do script
 sudo -v
 
+DRY_RUN=true
+
+isNotDryRun() {
+  [ "$DRY_RUN" = false ]
+}
+
 print_welcome() {
   show_header "Welcome to the Arch Linux setup script!"
 }
@@ -62,11 +68,21 @@ show_dry_run_warning() {
   show_warning "\nThis is a dry run. No changes will be made to your system."
 }
 
+sync_packages() {
+  show_info "\nSynchronizing package databases..."
+  if isNotDryRun; then
+    sudo pacman -Syy
+  else
+    show_dry_run_warning
+  fi
+}
+
 clear
 print_welcome
+sync_packages
 
 # Variables
-DRY_RUN=true
+
 
 KDE_PLASMA_APPS=(
   "spectacle"
@@ -92,7 +108,9 @@ GNOME_APPS=(
 
 FONTS=(
   "ttf-jetbrains-mono"
-  "ttf-roboto"
+  #"ttf-roboto"
+  "noto-fonts"
+  "ttf-liberation"
 )
 
 BASE_PACKAGES=(
@@ -126,12 +144,6 @@ FLATPAK_PACKAGES=(
   "com.valvesoftware.Steam"
   #"com.mattjakeman.ExtensionManager" only for GNOME
 )
-
-# Utils
-
-isNotDryRun() {
-  [ "$DRY_RUN" = false ]
-}
 
 # Function to check if a package is installed
 is_installed() {
@@ -174,7 +186,7 @@ update_system() {
   show_info "\nUpdating system..."
 
   if isNotDryRun; then
-    sudo pacman -Syu --noconfirm
+    sudo pacman -S --noconfirm
   else
     show_dry_run_warning
   fi
@@ -387,5 +399,3 @@ main() {
 }
 
 main
-
-
