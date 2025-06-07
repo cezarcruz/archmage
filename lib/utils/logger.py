@@ -1,13 +1,7 @@
-"""
-Logging configuration with colors
-"""
 import logging
 from .colors import Colors
 
-
 class ColoredFormatter(logging.Formatter):
-    """Formatter that adds colors to log messages based on their level."""
-    
     COLORS = {
         'DEBUG': Colors.CYAN,
         'INFO': Colors.GREEN,
@@ -24,7 +18,6 @@ class ColoredFormatter(logging.Formatter):
 
 
 def setup_logger(name=__name__, level=logging.INFO):
-    """Sets up and returns a logger with colored formatting."""
     handler = logging.StreamHandler()
     handler.setFormatter(ColoredFormatter('%(levelname)s: %(message)s'))
     
