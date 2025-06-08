@@ -34,6 +34,9 @@ class Config:
         return args
     
     def is_dry_run(self):
-        return self.dry_run    
+        return self.dry_run
+    
+    def is_not_dry_run(self):
+        return not self.dry_run
 
 config = Config()

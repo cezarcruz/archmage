@@ -4,6 +4,7 @@ import os
 import sys
 from lib.utils.logger import setup_logger
 from lib.utils.config import config
+from lib.utils.system import system 
 
 def show_dry_run_warning():
     if config.is_dry_run():
@@ -30,6 +31,8 @@ def main():
 
     print_welcome()
     show_dry_run_warning()
+
+    system.update()
 
 if __name__ == "__main__":
     logger = setup_logger(__name__)    
