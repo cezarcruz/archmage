@@ -1,0 +1,10 @@
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[user]
+	signingkey = /home/cezar/.ssh/id_rsa.pub
+	email = $EMAIL
+	name = Cezar Cruz
+[init]
+	defaultBranch = main

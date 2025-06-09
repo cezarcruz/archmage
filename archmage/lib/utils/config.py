@@ -5,14 +5,14 @@ from archmage.lib.utils.logger import setup_logger
 
 class Config:
     def __init__(self, dry_run: bool = True, logger=None):
-        self.dry_run = dry_run
+        self._dry_run = dry_run
         self.logger = logger or setup_logger(__name__)
         self.parse_args()
 
     def parse_args(self, args=None) -> None:
         parser = self._create_argument_parser()
         parsed_args = parser.parse_args(args)
-        self.dry_run = parsed_args.dry_run
+        self._dry_run = parsed_args.dry_run
 
     @classmethod
     def _create_argument_parser(cls) -> argparse.ArgumentParser:
@@ -39,10 +39,10 @@ class Config:
         return parser
 
     def is_dry_run(self) -> bool:
-        return self.dry_run
+        return self._dry_run
 
     def is_not_dry_run(self) -> bool:
-        return not self.dry_run
+        return not self._dry_run
 
 
 __all__ = ["default_config"]

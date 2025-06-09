@@ -5,6 +5,7 @@ from archmage.lib.utils.aur import default_aur
 from archmage.lib.utils.base_packages import default_base_packages
 from archmage.lib.utils.config import default_config
 from archmage.lib.utils.flatpak import default_flatpak
+from archmage.lib.utils.home import default_home
 from archmage.lib.utils.language import default_language
 from archmage.lib.utils.logger import setup_logger
 from archmage.lib.utils.services import default_services
@@ -21,7 +22,8 @@ class Application:
         language=None,
         services=None,
         aur=None,
-        flatpak=None
+        flatpak=None,
+        home=None
     ):
         self.logger = logger or setup_logger(__name__)
         self.config = config or default_config
@@ -31,6 +33,7 @@ class Application:
         self.services = services or default_services
         self.aur = aur or default_aur
         self.flatpak = flatpak or default_flatpak
+        self.home = home or default_home
 
     def run(self) -> None:
         self.logger.info("Running the application...")
@@ -46,6 +49,7 @@ class Application:
         self.services.start_common_services()
         self.aur.configure_chaotic_aur()
         self.flatpak.install_flatpaks()
+        self.home.configure_user_home()
 
     def check_sudo(self):
         if os.getuid() == 0:
