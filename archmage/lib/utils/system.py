@@ -1,5 +1,4 @@
 import subprocess
-from warnings import deprecated
 
 from archmage.lib.utils.config import default_config
 from archmage.lib.utils.logger import setup_logger
@@ -22,7 +21,7 @@ class System:
 
     def update(self) -> None:
         self.arbitraty_command(UPDATE_COMMAND + PACMAN_NO_INTERACTION_COMMAND)
-        
+
     # TODO: thinking about to change to receive list
     def enable_service(self, service: str) -> None:
         command = ENABLEBING_SERVICE_COMMAND + [service]
@@ -38,15 +37,13 @@ class System:
         else:
             self.logger.info(f"All packages are installed {package_list}")
 
+    #TODO: check packs already installed
     def install_flatpaks(self, package_list: list[str]) -> None:
-        command = INSTALL_COMMAND + package_list + FLATPAK_NO_INTERACTION_COMMAND
-
-        if self.config.is_dry_run():
-            self.logger.info(f"{command}")
-        
+        packages = " ".join(package_list)
+        command = INSTALL_FLATPAKS_COMMAND + [packages] + FLATPAK_NO_INTERACTION_COMMAND
         self.arbitraty_command(command)
 
-    #TODO turn private
+    # TODO turn private
     def arbitraty_command(self, command: list[str] | str) -> None:
         if self.config.is_dry_run():
             self.logger.info(f"Running arbitrary command {command}")
