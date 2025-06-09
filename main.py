@@ -2,38 +2,43 @@
 
 import os
 import sys
+
 from lib.utils.logger import setup_logger
 from lib.utils.config import config
 from lib.utils.system import system 
 
-def show_dry_run_warning():
-    if config.is_dry_run():
-        logger.warning("This is a dry run. No changes will be made to the system.")
-        logger.warning("To perform actual changes, set DRY_RUN to False in the script.")
+class App:
+    def __init__(self):
+        self.logger = setup_logger(__name__)
 
-def cleaning_screen():
-    os.system('clear' if os.name == 'posix' else 'cls')
+    def run(self):
+        self.logger.info("Running the application...")
+        self.cleaning_screen()
 
-def print_welcome():
-    logger.info("Welcome to the Arch Linux setup script!")
-    logger.info("This script will guide you through the post install setup process.")
-    logger.info("Please follow the instructions carefully.")
-
-def main():
-    cleaning_screen()
-
-    # check if the script is run with root privileges
-    if os.getuid() == 0:
-        logger.error("This script should not be run as root. Please run it as a regular user.")
-        sys.exit(1)
+        if os.getuid() == 0:
+            self.logger.error("This script should not be run as root. Please run it as a regular user.")
+            sys.exit(1)
     
-    config.parse_args()
+        config.parse_args()
 
-    print_welcome()
-    show_dry_run_warning()
+        self.print_welcome()
+        self.show_dry_run_warning()
 
-    system.update()
+        system.update()
+    
+    def cleaning_screen(self):
+        os.system('clear' if os.name == 'posix' else 'cls')
+
+    def show_dry_run_warning(self):
+        if config.is_dry_run():
+            self.logger.warning("This is a dry run. No changes will be made to the system.")
+            self.logger.warning("To perform actual changes, set DRY_RUN to False in the script.")
+
+    def print_welcome(self):
+        self.logger.info("Welcome to the Arch Linux setup script!")
+        self.logger.info("This script will guide you through the post install setup process.")
+        self.logger.info("Please follow the instructions carefully.")
 
 if __name__ == "__main__":
-    logger = setup_logger(__name__)    
-    main()
+    app = App()
+    app.run()

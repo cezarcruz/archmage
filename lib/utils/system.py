@@ -11,8 +11,9 @@ class System:
 
     def update(self):
 
+        self.logger.info(f"Running {UPDATE_COMMAND}")
+        
         if config.is_dry_run():
-            self.logger.info(f"Running {UPDATE_COMMAND}")
             return
 
         try:
