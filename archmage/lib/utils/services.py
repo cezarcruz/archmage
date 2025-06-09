@@ -17,4 +17,5 @@ class Services:
         for service in SERVICE_LIST:
             self.system.enable_service(service)
 
+__all__ = ["default_services"]
 default_services: Services = Services()
