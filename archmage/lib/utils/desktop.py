@@ -46,9 +46,7 @@ class Desktop:
             if response == "q":
                 sys.exit(0)
             else:
-                self.logger.error(
-                    "Invalid response. Please answer with 'y' or 'n' or 'q'."
-                )
+                self.logger.error("Invalid response. Please answer with 'y' or 'n' or 'q'.")
                 sys.exit(1)
 
             if response == "y":
