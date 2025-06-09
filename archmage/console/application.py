@@ -4,12 +4,14 @@ import sys
 from archmage.lib.utils.logger import setup_logger
 from archmage.lib.utils.config import default_config
 from archmage.lib.utils.system import default_system
+from archmage.lib.utils.base_packages import default_base_packages
 
 class Application:
-    def __init__(self, logger=None, config=None, system=None):
+    def __init__(self, logger=None, config=None, system=None, packages=None):
         self.logger = logger or setup_logger(__name__)
         self.config = config or default_config
         self.system = system or default_system
+        self.packages = packages or default_base_packages
 
     def run(self) -> None:
         self.logger.info("Running the application...")
@@ -21,6 +23,7 @@ class Application:
 
         self.system.update()
         self.system.configure_language()
+        self.packages.install_base_packages()
 
     def check_sudo(self):
         if os.getuid() == 0:
