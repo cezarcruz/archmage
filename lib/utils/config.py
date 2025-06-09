@@ -39,4 +39,6 @@ class Config:
     def is_not_dry_run(self):
         return not self.dry_run
 
-config = Config()
+__all__ = ['config']
+
+config: Config = Config()
