@@ -18,8 +18,6 @@ class App:
         
         self.cleaning_screen()
         self.check_sudo()
-    
-        self.config.parse_args()
 
         self.print_welcome()
         self.show_dry_run_warning()

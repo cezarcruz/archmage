@@ -6,16 +6,15 @@ class Config:
     def __init__(self, dry_run: bool=True, logger=None):
         self.dry_run = dry_run
         self.logger = logger or setup_logger(__name__)
+        self.parse_args()
     
-    def parse_args(self, args=None):
+    def parse_args(self, args=None) -> None:
         parser = self._create_argument_parser()
         parsed_args = parser.parse_args(args)
         self.dry_run = parsed_args.dry_run
-        
-        return parsed_args
 
     @classmethod
-    def _create_argument_parser(cls):
+    def _create_argument_parser(cls) -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(
             description='A script to configure Arch Linux post-installation setup.'
         )
@@ -38,10 +37,10 @@ class Config:
         
         return parser
     
-    def is_dry_run(self):
+    def is_dry_run(self) -> bool:
         return self.dry_run
     
-    def is_not_dry_run(self):
+    def is_not_dry_run(self) -> bool:
         return not self.dry_run
 
 __all__ = ['default_config']

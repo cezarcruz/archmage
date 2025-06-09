@@ -10,7 +10,7 @@ class System:
         self.logger = logger or setup_logger(__name__)
         self.config = config or default_config        
 
-    def update(self):
+    def update(self) -> None:
 
         self.logger.info(f"Running {UPDATE_COMMAND}")
         
