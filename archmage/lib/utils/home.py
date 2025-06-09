@@ -13,15 +13,49 @@ class Home:
         self.logger.info("Configuring home directory...")
         self._configure_git_config()
         self._configure_fontconfig()
+        self._configure_mise()
+        self._configure_kitty()
+        self._configure_ssh()
+        self._configure_fish()
 
     def _configure_git_config(self) -> None:
         git_config_file = self.files.get_asset_path(".gitconfig", FilesType.GIT)
         self.files.install_asset_in_home(git_config_file, ".gitconfig")
-    
+
     def _configure_fontconfig(self) -> None:
         self.files.create_dir(FilesType.FONTCONFIG.value)
         fonts_file = self.files.get_asset_path("fonts.conf", FilesType.FONTCONFIG)
         self.files.install_asset_in_home(fonts_file, FilesType.FONTCONFIG.value + "/fonts.conf")
+
+    def _configure_mise(self) -> None:
+        mise_config_file = self.files.get_asset_path(".mise.toml", FilesType.MISE)
+        self.files.install_asset_in_home(mise_config_file, FilesType.MISE.value + "/.mise.toml")
+
+    def _configure_kitty(self) -> None:
+        self.files.create_dir(FilesType.KITTY.value)
+        kitty_config = self.files.get_asset_path("kitty.conf", FilesType.KITTY)
+        self.files.install_asset_in_home(kitty_config, FilesType.KITTY.value + "/kitty.conf")
+        self.files.install_asset_in_home(
+            kitty_config, FilesType.KITTY.value + "/current-theme.conf"
+        )
+
+    def _configure_ssh(self) -> None:
+        self.logger.warning("_configure_ssh not implemented yet")
+
+    def _configure_fish(self) -> None:
+        content: list[str] = []
+        content.append("\n")
+        content.append("""
+# Inicia o Fish shell automaticamente
+if [[ $(ps --no-header --pid=$PPID --format=comm) != "fish" && -z ${BASH_EXECUTION_STRING} && ${SHLVL} == 1 ]]
+then
+    shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=''
+    exec fish $LOGIN_OPTION
+fi
+""")
+
+        self.files.append_to_file(".bashrc", content)
+
 
 __all__ = ["default_home"]
 default_home: Home = Home()
