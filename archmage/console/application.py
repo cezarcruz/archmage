@@ -1,16 +1,19 @@
 import os
 import sys
 
-from archmage.lib.utils.logger import setup_logger
-from archmage.lib.utils.config import default_config
-from archmage.lib.utils.system import default_system
 from archmage.lib.utils.base_packages import default_base_packages
+from archmage.lib.utils.config import default_config
+from archmage.lib.utils.language import default_language
+from archmage.lib.utils.logger import setup_logger
+from archmage.lib.utils.system import default_system
+
 
 class Application:
-    def __init__(self, logger=None, config=None, system=None, packages=None):
+    def __init__(self, logger=None, config=None, system=None, packages=None, language=None):
         self.logger = logger or setup_logger(__name__)
         self.config = config or default_config
         self.system = system or default_system
+        self.language = language or default_language
         self.packages = packages or default_base_packages
 
     def run(self) -> None:
@@ -22,7 +25,7 @@ class Application:
         self.show_dry_run_warning()
 
         self.system.update()
-        self.system.configure_language()
+        self.language.configure_language()
         self.packages.install_base_packages()
 
     def check_sudo(self):

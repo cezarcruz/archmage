@@ -1,13 +1,16 @@
 import subprocess
 
-from .config import default_config
-from .logger import setup_logger
-from .desktop import default_desktop
+from archmage.lib.utils.config import default_config
+from archmage.lib.utils.desktop import default_desktop
+from archmage.lib.utils.logger import setup_logger
 
-UPDATE_COMMAND = ['sudo', 'pacman', '-Syu']
-INSTALL_COMMAND = ['sudo', 'pacman', '-S']
-CHECK_INSTALLED_COMMAND = ['sudo', 'pacman', '-Qi']
-CHECK_GROUP_INSTALLED_COMMAND = ['sudo', 'pacman', '-Qg']
+UPDATE_COMMAND = ["sudo", "pacman", "-Syu"]
+INSTALL_COMMAND = ["sudo", "pacman", "-S"]
+CHECK_INSTALLED_COMMAND = ["sudo", "pacman", "-Qi"]
+CHECK_GROUP_INSTALLED_COMMAND = ["sudo", "pacman", "-Qg"]
+
+# TODO Revisit this.
+
 
 class System:
     def __init__(self, logger=None, config=None, desktop=None):
@@ -16,7 +19,6 @@ class System:
         self.desktop = desktop or default_desktop
 
     def update(self) -> None:
-
         self.logger.info(f"Running {UPDATE_COMMAND}")
 
         if self.config.is_dry_run():
@@ -43,7 +45,9 @@ class System:
             self.logger.info(f"all packages are installed {package_list}")
 
     def _get_packages_not_installed(self, package_list: list[str]) -> list[str]:
-        packages_not_installed: list[str] = list(filter(self._is_installed, package_list))
+        packages_not_installed: list[str] = list(
+            filter(self._is_installed, package_list)
+        )
         return list(filter(self._is_group_installed, packages_not_installed))
 
     def _is_installed(self, package_name: str) -> bool:
@@ -52,7 +56,7 @@ class System:
                 CHECK_INSTALLED_COMMAND + [package_name],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
-                check=True
+                check=True,
             )
             return True
         except subprocess.CalledProcessError:
@@ -64,24 +68,13 @@ class System:
                 CHECK_GROUP_INSTALLED_COMMAND + [package_name],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
-                check=True
+                check=True,
             )
             return True
         except subprocess.CalledProcessError:
             return False
 
-    def configure_language(self) -> None:
-        self.logger.info("Configuring system language...")
 
-        if self.config.is_dry_run():
-            self.logger.info("printf pt_BR.UTF-8 UTF-8")
-
-            if self.desktop.is_kde():
-                self.logger.info("printf LC_TIME=pt_BR.UTF-8")
-
-            self.logger.info("printf LC_CTYPE=pt_BR.UTF-8")
-
-
-__all__ = ['default_system']
+__all__ = ["default_system"]
 
 default_system: System = System()
