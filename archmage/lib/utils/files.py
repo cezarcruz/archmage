@@ -12,6 +12,7 @@ class FilesType(Enum):
     FONTCONFIG = ".config/fontconfig"
     MISE = "mise"
     KITTY = ".config/kitty"
+    ETC = "etc"
 
 
 PROJECT_ROOT_DIR = str(Path(__file__).parent.parent.parent.parent)
@@ -36,6 +37,9 @@ class Files:
 
         shutil.copy2(path_origin, destination)
 
+    def install_asset(self, path_origin: str, path_destination: str) -> None:
+        pass
+
     def create_dir(self, path_destination: str):
         path = HOME_DIR + path_destination
 
@@ -46,7 +50,7 @@ class Files:
         os.makedirs(path, exist_ok=True)
 
     def append_to_file(self, path_destination: str, content: list[str]) -> None:
-        destination = HOME_DIR + path_destination        
+        destination = HOME_DIR + path_destination
 
         if self.config.is_dry_run():
             self.logger.info(f"appending {content} to {destination}")
@@ -54,7 +58,6 @@ class Files:
 
         with open(destination, "a") as file:
             file.writelines(content)
-
 
 
 __all__ = ["default_files"]

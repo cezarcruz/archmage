@@ -5,7 +5,8 @@ from archmage.lib.utils.logger import setup_logger
 
 UPDATE_COMMAND = ["sudo", "pacman", "-Syu"]
 INSTALL_COMMAND = ["sudo", "pacman", "-S"]
-CHECK_INSTALLED_COMMAND = ["sudo", "pacman", "-Qi"]
+REMOVE_COMMAND = ["sudo", "pacman", "-Rs"]
+CHECK_INSTALLED_COMMAND = ["sudo", "pacman", "-Qi"] 
 CHECK_GROUP_INSTALLED_COMMAND = ["sudo", "pacman", "-Qg"]
 ENABLEBING_SERVICE_COMMAND = ["sudo", "systemctl", "enable"]
 INSTALL_FLATPAKS_COMMAND = ["flatpak", "install", "flathub"]
@@ -27,7 +28,7 @@ class System:
         command = ENABLEBING_SERVICE_COMMAND + [service]
         self.arbitraty_command(command)
 
-    def install_package(self, package_list: list[str]) -> None:
+    def install_packages(self, package_list: list[str]) -> None:
         packages_not_installed = self._get_packages_not_installed(package_list)
         if len(packages_not_installed) != 0:
             packages_to_install: str = " ".join(package_list)
@@ -43,6 +44,12 @@ class System:
         command = INSTALL_FLATPAKS_COMMAND + [packages] + FLATPAK_NO_INTERACTION_COMMAND
         self.arbitraty_command(command)
 
+    def remove_packages(self, package_list: list[str]) -> None:
+        packages_to_install: str = " ".join(package_list)
+        self.arbitraty_command(
+            REMOVE_COMMAND + [packages_to_install] + PACMAN_NO_INTERACTION_COMMAND
+        )
+
     # TODO turn private
     def arbitraty_command(self, command: list[str] | str) -> None:
         if self.config.is_dry_run():
@@ -53,6 +60,7 @@ class System:
             subprocess.run(command, check=True)
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Error running arbitrary command {command}: {e}")
+
 
     def _get_packages_not_installed(self, package_list: list[str]) -> list[str]:
         if self.config.is_dry_run():

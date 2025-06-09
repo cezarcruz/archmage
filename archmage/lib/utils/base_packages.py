@@ -31,6 +31,14 @@ BASE_FONTS_PACKAGES: list[str] = [
     "ttf-liberation",
 ]
 
+PACKAGES_TO_REMOVE: list[str] = [
+    "htop",
+    "nano",
+    "epiphany",
+    "gnome-tour",
+    "gnome-console",
+]
+
 
 class BasePackages:
     def __init__(self, logger=None, system=None):
@@ -38,10 +46,11 @@ class BasePackages:
         self.system = system or default_system
 
     def install_base_packages(self) -> None:
-        self.logger.info("Installing base packages...")
-        self.system.install_package(BASE_PACKAGES)
-        self.logger.info("Installing fonts...")
-        self.system.install_package(BASE_FONTS_PACKAGES)
+        self.system.install_packages(BASE_PACKAGES)
+        self.system.install_packages(BASE_FONTS_PACKAGES)
+
+    def remove_unnused_packages(self) -> None:
+        self.system.remove_packages(PACKAGES_TO_REMOVE)
 
 
 default_base_packages: BasePackages = BasePackages()

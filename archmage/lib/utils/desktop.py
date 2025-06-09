@@ -51,10 +51,10 @@ class Desktop:
 
             if response == "y":
                 self.logger.info("Proceeding with KDE Plasma setup...")
-                self.system.install_package(KDE_PLASMA_APPS)
+                self.system.install_packages(KDE_PLASMA_APPS)
             else:
                 self.logger.info("Setupping GNOME desktop environment instead.")
-                self.system.install_package(GNOME_APPS)
+                self.system.install_packages(GNOME_APPS)
 
 
 __all__ = ["default_desktop"]
