@@ -1,14 +1,14 @@
 import subprocess
 
-from .config import config
+from .config import default_config
 from .logger import setup_logger
 
 UPDATE_COMMAND = ['sudo', 'pacman', '-Syu']
 
 class System:
-    def __init__(self):
-        self.logger = setup_logger(__name__)
-        self.config = config
+    def __init__(self, logger=None, config=None):
+        self.logger = logger or setup_logger(__name__)
+        self.config = config or default_config        
 
     def update(self):
 
@@ -22,6 +22,6 @@ class System:
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Error updating system: {e}")
 
-__all__ = ['system']
+__all__ = ['default_system']
 
-system: System = System()
+default_system: System = System()

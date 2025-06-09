@@ -4,22 +4,20 @@ import os
 import sys
 
 from lib.utils.logger import setup_logger
-from lib.utils.config import config
-from lib.utils.system import system 
+from lib.utils.config import default_config
+from lib.utils.system import default_system
 
 class App:
-    def __init__(self):
-        self.logger = setup_logger(__name__)
-        self.config = config
-        self.system = system
+    def __init__(self, logger=None, config=None, system=None):
+        self.logger = logger or setup_logger(__name__)
+        self.config = config or default_config
+        self.system = system or default_system
 
     def run(self) -> None:
         self.logger.info("Running the application...")
+        
         self.cleaning_screen()
-
-        if os.getuid() == 0:
-            self.logger.error("This script should not be run as root. Please run it as a regular user.")
-            sys.exit(1)
+        self.check_sudo()
     
         self.config.parse_args()
 
@@ -27,9 +25,14 @@ class App:
         self.show_dry_run_warning()
 
         self.system.update()
+
+    def check_sudo(self):
+        if os.getuid() == 0:
+            self.logger.error("This script should not be run as root. Please run it as a regular user.")
+            sys.exit(1)
     
     def cleaning_screen(self) -> None:
-        os.system('clear' if os.name == 'posix' else 'cls')
+        os.system("clear" if os.name == "posix" else "cls")
 
     def show_dry_run_warning(self) -> None:
         if self.config.is_dry_run():
