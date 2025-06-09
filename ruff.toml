@@ -1,2 +1,14 @@
+exclude = [
+    ".git",    
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",    
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "__pycache__"    
+]
+
 line-length = 99
 indent-width = 4
