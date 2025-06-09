@@ -18,11 +18,11 @@ class App:
         
         self.cleaning_screen()
         self.check_sudo()
-
         self.print_welcome()
         self.show_dry_run_warning()
 
         self.system.update()
+        self.system.configure_language()
 
     def check_sudo(self):
         if os.getuid() == 0:
