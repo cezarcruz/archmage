@@ -10,7 +10,7 @@ CHECK_INSTALLED_COMMAND = ["sudo", "pacman", "-Qi"]
 CHECK_GROUP_INSTALLED_COMMAND = ["sudo", "pacman", "-Qg"]
 ENABLEBING_SERVICE_COMMAND = ["sudo", "systemctl", "enable"]
 INSTALL_FLATPAKS_COMMAND = ["flatpak", "install", "flathub"]
-PACMAN_NO_INTERACTION_COMMAND = ["--no-confirm"]
+PACMAN_NO_INTERACTION_COMMAND = ["--noconfirm"]
 FLATPAK_NO_INTERACTION_COMMAND = ["-y"]
 
 
@@ -21,7 +21,7 @@ class System:
         self.config = config or default_config
 
     def update(self) -> None:
-        self.arbitraty_command(UPDATE_COMMAND + PACMAN_NO_INTERACTION_COMMAND)
+        self.arbitraty_command(UPDATE_COMMAND)
 
     # TODO: thinking about to change to receive list
     def enable_service(self, service: str) -> None:
@@ -57,7 +57,7 @@ class System:
             return
 
         try:
-            subprocess.run(command, check=True)
+            subprocess.run(command)
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Error running arbitrary command {command}: {e}")
 
