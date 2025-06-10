@@ -1,5 +1,28 @@
+from archmage.lib.utils.desktop import default_desktop
 from archmage.lib.utils.logger import setup_logger
 from archmage.lib.utils.system import default_system
+
+KDE_PLASMA_APPS = [
+    "spectacle",
+    "xdg-desktop-portal-gtk",
+    "flatpak",
+    "partitionmanager",
+    "okular",
+    "geoclue",
+    "dragon",
+    "filelight",
+    "inter-font",
+    "gwenview",
+    "haruna",
+    "kcalc",
+]
+
+GNOME_APPS = [
+    "papers",
+    "nautilus-python",
+    "adw-gtk-theme",
+    "ghostty",
+]
 
 BASE_PACKAGES: list[str] = [
     "firefox",
@@ -41,13 +64,19 @@ PACKAGES_TO_REMOVE: list[str] = [
 
 
 class BasePackages:
-    def __init__(self, logger=None, system=None):
+    def __init__(self, logger=None, system=None, desktop=None):
         self.logger = logger or setup_logger(__name__)
         self.system = system or default_system
+        self.desktop = desktop or default_desktop
 
     def install_base_packages(self) -> None:
         self.system.install_packages(BASE_PACKAGES)
         self.system.install_packages(BASE_FONTS_PACKAGES)
+
+        if self.desktop.is_kde():
+            self.system.install_packages(KDE_PLASMA_APPS)
+        else:
+            self.system.install_packages(GNOME_APPS)
 
     def remove_unnused_packages(self) -> None:
         self.system.remove_packages(PACKAGES_TO_REMOVE)
