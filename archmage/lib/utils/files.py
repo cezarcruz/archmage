@@ -13,6 +13,7 @@ class FilesType(Enum):
     MISE = "mise"
     KITTY = ".config/kitty"
     ETC = "etc"
+    HOME = ""
 
 
 PROJECT_ROOT_DIR = str(Path(__file__).parent.parent.parent.parent)

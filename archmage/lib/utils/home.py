@@ -29,7 +29,7 @@ class Home:
 
     def _configure_mise(self) -> None:
         mise_config_file = self.files.get_asset_path(".mise.toml", FilesType.MISE)
-        self.files.install_asset_in_home(mise_config_file, FilesType.MISE.value + "/.mise.toml")
+        self.files.install_asset_in_home(mise_config_file, FilesType.HOME.value + ".mise.toml")
 
     def _configure_kitty(self) -> None:
         self.files.create_dir(FilesType.KITTY.value)
