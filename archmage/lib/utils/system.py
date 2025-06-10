@@ -6,7 +6,7 @@ from archmage.lib.utils.logger import setup_logger
 UPDATE_COMMAND = ["sudo", "pacman", "-Syu"]
 INSTALL_COMMAND = ["sudo", "pacman", "-S"]
 REMOVE_COMMAND = ["sudo", "pacman", "-Rs"]
-CHECK_INSTALLED_COMMAND = ["sudo", "pacman", "-Qi"] 
+CHECK_INSTALLED_COMMAND = ["sudo", "pacman", "-Qi"]
 CHECK_GROUP_INSTALLED_COMMAND = ["sudo", "pacman", "-Qg"]
 ENABLEBING_SERVICE_COMMAND = ["sudo", "systemctl", "enable"]
 INSTALL_FLATPAKS_COMMAND = ["flatpak", "install", "flathub"]
@@ -31,24 +31,19 @@ class System:
     def install_packages(self, package_list: list[str]) -> None:
         packages_not_installed = self._get_packages_not_installed(package_list)
         if len(packages_not_installed) != 0:
-            packages_to_install: str = " ".join(package_list)
             self.arbitraty_command(
-                INSTALL_COMMAND + [packages_to_install] + PACMAN_NO_INTERACTION_COMMAND
+                INSTALL_COMMAND + packages_not_installed + PACMAN_NO_INTERACTION_COMMAND
             )
         else:
             self.logger.info(f"All packages are installed {package_list}")
 
-    #TODO: check packs already installed
+    # TODO: check packs already installed
     def install_flatpaks(self, package_list: list[str]) -> None:
-        packages = " ".join(package_list)
-        command = INSTALL_FLATPAKS_COMMAND + [packages] + FLATPAK_NO_INTERACTION_COMMAND
+        command = INSTALL_FLATPAKS_COMMAND + package_list + FLATPAK_NO_INTERACTION_COMMAND
         self.arbitraty_command(command)
 
     def remove_packages(self, package_list: list[str]) -> None:
-        packages_to_install: str = " ".join(package_list)
-        self.arbitraty_command(
-            REMOVE_COMMAND + [packages_to_install] + PACMAN_NO_INTERACTION_COMMAND
-        )
+        self.arbitraty_command(REMOVE_COMMAND + package_list + PACMAN_NO_INTERACTION_COMMAND)
 
     # TODO turn private
     def arbitraty_command(self, command: list[str] | str) -> None:
@@ -57,10 +52,10 @@ class System:
             return
 
         try:
+            self.logger.info(f"Running {command}")
             subprocess.run(command)
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Error running arbitrary command {command}: {e}")
-
 
     def _get_packages_not_installed(self, package_list: list[str]) -> list[str]:
         if self.config.is_dry_run():
@@ -70,24 +65,12 @@ class System:
         return list(filter(self._is_group_installed, packages_not_installed))
 
     def _is_installed(self, package_name: str) -> bool:
-        try:
-            subprocess.run(
-                CHECK_INSTALLED_COMMAND + [package_name],
-                check=True,
-            )
-            return True
-        except subprocess.CalledProcessError:
-            return False
+        self.logger.info(f"running {CHECK_INSTALLED_COMMAND + [package_name]}")
+        return False
 
     def _is_group_installed(self, package_name: str) -> bool:
-        try:
-            subprocess.run(
-                CHECK_GROUP_INSTALLED_COMMAND + [package_name],
-                check=True,
-            )
-            return True
-        except subprocess.CalledProcessError:
-            return False
+        self.logger.info(f"running {CHECK_GROUP_INSTALLED_COMMAND + [package_name]}")
+        return False
 
 
 __all__ = ["default_system"]
