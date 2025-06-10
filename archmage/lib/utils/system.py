@@ -47,7 +47,11 @@ class System:
 
         try:
             self.logger.info(f"Running {command}")
-            subprocess.run(command)
+            
+            if isinstance(command, list):
+                subprocess.run(command)
+            else:
+                subprocess.run(command, shell=True)
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Error running arbitrary command {command}: {e}")
 
