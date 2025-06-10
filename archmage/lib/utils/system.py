@@ -29,13 +29,7 @@ class System:
         self.arbitraty_command(command)
 
     def install_packages(self, package_list: list[str]) -> None:
-        packages_not_installed = self._get_packages_not_installed(package_list)
-        if len(packages_not_installed) != 0:
-            self.arbitraty_command(
-                INSTALL_COMMAND + packages_not_installed + PACMAN_NO_INTERACTION_COMMAND
-            )
-        else:
-            self.logger.info(f"All packages are installed {package_list}")
+        self.arbitraty_command(INSTALL_COMMAND + package_list + PACMAN_NO_INTERACTION_COMMAND)
 
     # TODO: check packs already installed
     def install_flatpaks(self, package_list: list[str]) -> None:

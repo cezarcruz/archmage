@@ -13,8 +13,8 @@ class Aur:
         self.system.arbitraty_command(["sudo", "pacman-key", "--init"])
         self.system.arbitraty_command(["sudo", "pacman-key", "--recv-key", "3056513887B78AEB", "--keyserver", "keyserver.ubuntu.com"])
         self.system.arbitraty_command(["sudo", "pacman-key", "--lsign-key", "3056513887B78AEB"])
-        self.system.arbitraty_command(["sudo", "-U", "'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'"])
-        self.system.arbitraty_command(["sudo", "-U", "'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'"])
+        self.system.arbitraty_command(["sudo", "pacman", "-U", "'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'"])
+        self.system.arbitraty_command(["sudo", "pacman", "-U", "'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'"])
         self.system.arbitraty_command('printf "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist\n" | sudo tee -a /etc/pacman.conf')
 
 __all__ = ["default_aur"]
