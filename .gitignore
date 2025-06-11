@@ -3,3 +3,9 @@
 
 .ssh
 .gitconfig
+.env
+
+__pycache__
+*.pyc
+
+.idea

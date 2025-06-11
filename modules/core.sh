@@ -23,3 +23,7 @@ is_group_installed() {
 isKde() {
   [ "$DESKTOP_SESSION" = "plasma" ]
 }
+
+file_exists() {
+  [ -f "$1" ]
+}

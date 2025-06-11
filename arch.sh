@@ -7,8 +7,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export SCRIPT_DIR
 export DRY_RUN=true
 
-# Load all modules
+# Load core module
 source "$SCRIPT_DIR/modules/core.sh"
+
+# Load all modules
 source "$SCRIPT_DIR/modules/colors.sh"
 source "$SCRIPT_DIR/modules/system.sh"
 source "$SCRIPT_DIR/modules/packages.sh"
@@ -30,7 +32,8 @@ main() {
   if ! isNotDryRun; then
     show_dry_run_warning
   fi
-
+  
+  load_settings
   sync_packages
   update_system
   configure_language

@@ -3,6 +3,15 @@ setup_desktop_environment() {
   if [ "$DESKTOP_SESSION" = "plasma" ]; then
     show_question "Detected KDE Plasma desktop environment. Can you confirm this? (y/n):"
     read -r response
+
+    if [ "$response" = "q" ]; then
+      show_info "Exiting setup."
+      exit 0
+    elif [ "$response" != "y" ]; then
+      show_error "Invalid response. Please answer with 'y' or 'n'."
+      exit 1
+    fi
+
     if [ "$response" = "y" ]; then
       show_info "Proceeding with KDE Plasma setup..."
       install_packages "${KDE_PLASMA_APPS[@]}"
