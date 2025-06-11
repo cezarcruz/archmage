@@ -36,7 +36,9 @@ class Home:
         kitty_config = self.files.get_asset_path("kitty.conf", FilesType.KITTY)
         kitty_theme = self.files.get_asset_path("current-theme.conf", FilesType.KITTY)
         self.files.install_asset_in_home(kitty_config, FilesType.KITTY.value + "/kitty.conf")
-        self.files.install_asset_in_home(kitty_theme, FilesType.KITTY.value + "/current-theme.conf")
+        self.files.install_asset_in_home(
+            kitty_theme, FilesType.KITTY.value + "/current-theme.conf"
+        )
 
     def _configure_ssh(self) -> None:
         self.logger.warning("_configure_ssh not implemented yet")
@@ -52,9 +54,9 @@ then
     exec fish $LOGIN_OPTION
 fi
 """)
-
         self.files.append_to_file(".bashrc", content)
-
+        fish_config_file = self.files.get_asset_path("config.fish", FilesType.FISH)
+        self.files.install_asset_in_home(fish_config_file, FilesType.FISH.value + "/config.fish")
 
 __all__ = ["default_home"]
 default_home: Home = Home()
