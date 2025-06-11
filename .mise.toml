@@ -1,4 +1,0 @@
-[tools]
-node    = 'lts'
-java    = '21'
-maven   = '3'
