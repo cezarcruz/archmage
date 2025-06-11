@@ -13,6 +13,7 @@ class FilesType(Enum):
     MISE = "mise"
     KITTY = ".config/kitty"
     ETC = "etc"
+    FISH = ".config/fish"
     HOME = ""
 
 
