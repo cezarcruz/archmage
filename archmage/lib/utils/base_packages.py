@@ -60,6 +60,7 @@ PACKAGES_TO_REMOVE: list[str] = [
     "epiphany",
     "gnome-tour",
     "gnome-console",
+    "gnu-free-fonts"
 ]
 
 
