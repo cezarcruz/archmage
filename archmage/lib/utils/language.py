@@ -1,4 +1,3 @@
-from archmage.lib.utils.config import default_config
 from archmage.lib.utils.desktop import default_desktop
 from archmage.lib.utils.logger import setup_logger
 from archmage.lib.utils.system import default_system
@@ -7,7 +6,6 @@ from archmage.lib.utils.system import default_system
 class Language:
     def __init__(self, logger=None, config=None, desktop=None, system=None):
         self.logger = logger or setup_logger(__name__)
-        self.config = config or default_config
         self.desktop = desktop or default_desktop
         self.system = system or default_system
 
