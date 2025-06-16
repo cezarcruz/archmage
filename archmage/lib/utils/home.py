@@ -55,6 +55,7 @@ then
 fi
 """)
         self.files.append_to_file(".bashrc", content)
+        self.files.create_dir(FilesType.FISH.value)
         fish_config_file = self.files.get_asset_path("config.fish", FilesType.FISH)
         self.files.install_asset_in_home(fish_config_file, FilesType.FISH.value + "/config.fish")
 
