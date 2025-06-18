@@ -47,17 +47,22 @@ class Home:
         content: list[str] = []
         content.append("\n")
         content.append("""
-# Inicia o Fish shell automaticamente
 if [[ $(ps --no-header --pid=$PPID --format=comm) != "fish" && -z ${BASH_EXECUTION_STRING} && ${SHLVL} == 1 ]]
 then
     shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=''
     exec fish $LOGIN_OPTION
 fi
 """)
+        if self.config.is_dry_run():
+            self.logger.info("appending to .bashrc")
+            self.logger.info(content)
+            return
+        
         self.files.append_to_file(".bashrc", content)
         self.files.create_dir(FilesType.FISH.value)
         fish_config_file = self.files.get_asset_path("config.fish", FilesType.FISH)
         self.files.install_asset_in_home(fish_config_file, FilesType.FISH.value + "/config.fish")
+
 
 __all__ = ["default_home"]
 default_home: Home = Home()
