@@ -49,7 +49,6 @@ BASE_PACKAGES: list[str] = [
 
 BASE_FONTS_PACKAGES: list[str] = [
     "ttf-jetbrains-mono",
-    # "ttf-roboto",
     "noto-fonts",
     "ttf-liberation",
 ]
