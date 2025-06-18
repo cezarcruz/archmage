@@ -53,11 +53,7 @@ then
     exec fish $LOGIN_OPTION
 fi
 """)
-        if self.config.is_dry_run():
-            self.logger.info("appending to .bashrc")
-            self.logger.info(content)
-            return
-        
+
         self.files.append_to_file(".bashrc", content)
         self.files.create_dir(FilesType.FISH.value)
         fish_config_file = self.files.get_asset_path("config.fish", FilesType.FISH)
