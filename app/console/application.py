@@ -1,16 +1,16 @@
 import os
 import sys
 
-from archmage.lib.utils.aur import default_aur
-from archmage.lib.utils.base_packages import default_base_packages
-from archmage.lib.utils.config import default_config
-from archmage.lib.utils.flatpak import default_flatpak
-from archmage.lib.utils.home import default_home
-from archmage.lib.utils.language import default_language
-from archmage.lib.utils.logger import setup_logger
-from archmage.lib.utils.services import default_services
-from archmage.lib.utils.system import default_system
-from archmage.lib.utils.system_settings import default_system_settings
+from app.lib.utils.aur import default_aur
+from app.lib.utils.base_packages import default_base_packages
+from app.lib.utils.config import default_config
+from app.lib.utils.flatpak import default_flatpak
+from app.lib.utils.home import default_home
+from app.lib.utils.language import default_language
+from app.lib.utils.logger import setup_logger
+from app.lib.utils.services import default_services
+from app.lib.utils.system import default_system
+from app.lib.utils.system_settings import default_system_settings
 
 
 class Application:

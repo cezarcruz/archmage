@@ -3,8 +3,8 @@ import shutil
 from enum import Enum
 from pathlib import Path
 
-from archmage.lib.utils.config import default_config
-from archmage.lib.utils.logger import setup_logger
+from app.lib.utils.config import default_config
+from app.lib.utils.logger import setup_logger
 
 
 class FilesType(Enum):

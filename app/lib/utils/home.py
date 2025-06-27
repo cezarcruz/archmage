@@ -1,6 +1,6 @@
-from archmage.lib.utils.config import default_config
-from archmage.lib.utils.files import FilesType, default_files
-from archmage.lib.utils.logger import setup_logger
+from app.lib.utils.config import default_config
+from app.lib.utils.files import FilesType, default_files
+from app.lib.utils.logger import setup_logger
 
 
 class Home:

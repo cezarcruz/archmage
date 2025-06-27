@@ -1,6 +1,6 @@
 import logging
 
-from archmage.lib.utils.colors import Colors
+from app.lib.utils.colors import Colors
 
 
 class ColoredFormatter(logging.Formatter):

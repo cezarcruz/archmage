@@ -1,6 +1,6 @@
-from archmage.lib.utils.config import default_config
-from archmage.lib.utils.logger import setup_logger
-from archmage.lib.utils.system import default_system
+from app.lib.utils.config import default_config
+from app.lib.utils.logger import setup_logger
+from app.lib.utils.system import default_system
 
 SERVICE_LIST: list[str] = ["docker", "reflector.timer", "fstrim.timer", "paccache.timer"]
 

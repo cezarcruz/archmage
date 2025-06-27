@@ -1,5 +1,5 @@
-from archmage.lib.utils.files import FilesType, default_files
-from archmage.lib.utils.system import default_system
+from app.lib.utils.files import FilesType, default_files
+from app.lib.utils.system import default_system
 
 
 class SystemSettings:

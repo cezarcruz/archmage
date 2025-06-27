@@ -1,6 +1,6 @@
 import argparse
 
-from archmage.lib.utils.logger import setup_logger
+from app.lib.utils.logger import setup_logger
 
 
 class Config:

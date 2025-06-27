@@ -1,7 +1,7 @@
 import subprocess
 
-from archmage.lib.utils.config import default_config
-from archmage.lib.utils.logger import setup_logger
+from app.lib.utils.config import default_config
+from app.lib.utils.logger import setup_logger
 
 UPDATE_COMMAND = ["sudo", "pacman", "-Syu"]
 INSTALL_COMMAND = ["sudo", "pacman", "-S"]

@@ -1,6 +1,6 @@
-from archmage.lib.utils.desktop import default_desktop
-from archmage.lib.utils.logger import setup_logger
-from archmage.lib.utils.system import default_system
+from app.lib.utils.desktop import default_desktop
+from app.lib.utils.logger import setup_logger
+from app.lib.utils.system import default_system
 
 KDE_PLASMA_APPS = [
     "spectacle",
