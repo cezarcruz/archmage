@@ -29,7 +29,13 @@ class System:
         self.arbitraty_command(command)
 
     def install_packages(self, package_list: list[str]) -> None:
-        self.arbitraty_command(INSTALL_COMMAND + package_list + PACMAN_NO_INTERACTION_COMMAND)
+        packages_to_install = self._get_packages_not_installed(package_list)
+        if not packages_to_install:
+            self.logger.info("All packages are already installed.")
+            return
+
+        command = INSTALL_COMMAND + packages_to_install + PACMAN_NO_INTERACTION_COMMAND
+        self.arbitraty_command(command)
 
     # TODO: check packs already installed
     def install_flatpaks(self, package_list: list[str]) -> None:
@@ -47,7 +53,7 @@ class System:
 
         try:
             self.logger.info(f"Running {command}")
-            
+
             if isinstance(command, list):
                 subprocess.run(command)
             else:
@@ -59,12 +65,30 @@ class System:
         if self.config.is_dry_run():
             return package_list
 
-        packages_not_installed: list[str] = list(filter(self._is_installed, package_list))
-        return list(filter(self._is_group_installed, packages_not_installed))
+        self.logger.info("Checking for already installed packages...")
+        return list(filter(self._is_installed, package_list))
 
     def _is_installed(self, package_name: str) -> bool:
-        self.logger.info(f"running {CHECK_INSTALLED_COMMAND + [package_name]}")
-        return False
+        """Checks if a package is installed. Returns True if the package is NOT installed."""
+        try:
+            result = subprocess.run(
+                ["pacman", "-Q", package_name],
+                check=False,
+                capture_output=True,
+            )
+            if result.returncode == 0:
+                self.logger.info(f"Package '{package_name}' is already installed.")
+                return False
+            else:
+                self.logger.info(
+                    f"Package '{package_name}' is not installed, scheduling for installation."
+                )
+                return True
+        except Exception as e:
+            self.logger.error(
+                f"An error occurred while checking if {package_name} is installed: {e}"
+            )
+            return False
 
     def _is_group_installed(self, package_name: str) -> bool:
         self.logger.info(f"running {CHECK_GROUP_INSTALLED_COMMAND + [package_name]}")
