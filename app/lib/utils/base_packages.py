@@ -2,6 +2,8 @@ from app.lib.utils.desktop import default_desktop
 from app.lib.utils.logger import setup_logger
 from app.lib.utils.system import default_system
 
+POST_KDE = ["isoimagewriter", "ktorrent", "flatpak-kcm", "power-profiles-daemon"]
+
 KDE_PLASMA_APPS = [
     "spectacle",
     "xdg-desktop-portal-gtk",
